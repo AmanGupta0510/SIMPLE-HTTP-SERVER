@@ -1,0 +1,5 @@
+*.class
+target/
+out/
+build/
+src/*.class  # If src-specific
