@@ -61,11 +61,11 @@ public class ResponseHandler implements requestHandler {
             }
             final String HTTP_NEW_LINE_SEPERATOR = "\r\n";
             final String HTTP_HEAD_BODY_SEPERATOR = HTTP_NEW_LINE_SEPERATOR+HTTP_NEW_LINE_SEPERATOR;
-            var res = reqHandler.handle(req);
+            var res = reqHandler.handle(req);// handle the request of the client , provide response  with correct header and correct body.res contains the response of client request.
             var os = connection.getOutputStream(); // Get the stream to send data to the client.
             var responseHead = new StringBuilder("HTTP/1.1 %d".formatted(res.statusCode()));
 
-            res.header().forEach((k,vs)->{
+            res.header().forEach((k,vs)->{ // just traversing through the response header and added it in the string builder.
                vs.forEach(v->{
                  responseHead.append(HTTP_NEW_LINE_SEPERATOR)
                         .append(k)
@@ -77,7 +77,7 @@ public class ResponseHandler implements requestHandler {
             responseHead.append(HTTP_HEAD_BODY_SEPERATOR);
             os.write(responseHead.toString().getBytes(StandardCharsets.US_ASCII)); // write the response in the byte[] to the client.  
             if(res.body().length >0){
-                os.write(res.body());
+                os.write(res.body()); // if there is a body for the request then also write it to send the data to client.
             }
 
 			
@@ -87,18 +87,52 @@ public class ResponseHandler implements requestHandler {
 
         }
         public HttpResponse handle(HttpReq request) {
-				var body ="""
-                {
-                  "id":1,
-                  "url":"%s",
-                  "bodyLength":%d
-                }
-                """.formatted(request.url(),request.body().length).getBytes(StandardCharsets.UTF_8);
+		
+            var url  = request.url();
+            var statusCode = 200;
+            if(url.equals("/"))url+="index.html";
+           
+           
+            var fileName = url.split("\\.",2); // why \\. bcz "." is considered as a special Character so that's why we use escaped key  Outer \ escapes for Java string literal → single \ in string Inner \ escapes . for regex → literal dot matcher.
+            // ex:- fileName -> ["/index","html"] or ["/"]
+           
+            FileServer fileManipulation = new FileServer();
 
-        var responseHeader =  Map.of("Content-Type", List.of(" application/json" ),
-                                "Content-Length", List.of(String.valueOf(body.length))); 
-        return new HttpResponse(200,responseHeader,body);   
-			} 
+            var filePath = fileManipulation.findPath(fileName[0]);
+            
+            var body = fileManipulation.readFileContext(filePath,url);
+            if(filePath.equals("public/error.html")){
+                statusCode = 404;
+            }
+            // var responseBody = body.getBytes(StandardCharsets.UTF_8);
+
+
+
+            
+            var responseHeader =  Map.of("Content-Type", List.of(fileManipulation.getMIME(filePath)),
+                                     "Content-Length", List.of(String.valueOf(body.length))); 
+            return new HttpResponse(statusCode,responseHeader,body); 
+
+
+
+
+
+
+
+
+        } 
+
+            // 		var body ="""
+        //         {
+        //           "id":1,
+        //           "url":"%s",
+        //           "bodyLength":%d
+        //         }
+        //         """.formatted(request.url(),request.body().length).getBytes(StandardCharsets.UTF_8);
+
+        // var responseHeader =  Map.of("Content-Type", List.of(" application/json" ),
+        //                         "Content-Length", List.of(String.valueOf(body.length))); 
+        // return new HttpResponse(200,responseHeader,body);   
 
 
 

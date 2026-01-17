@@ -21,17 +21,18 @@ public class serverHandler implements HttpServerApp {
         this.requestExecutor = executor;
         this.connectionTimeOut  = connectionTimeOut; 
     }
-
+    //  This start() func is an abstract method of HttpServerApp interface,
+    //  and here in this func we handle the parsed HTTP requests as well as server Connection. 
     @Override
     public void start(requestHandler reqH) {
-        if(serverSocket == null ){
+        if(serverSocket == null ){ // check if server already running.
             try{
-                serverSocket = new ServerSocket(port);
+                serverSocket = new ServerSocket(port); // initialize the serverSocket on configured port.
             }catch(Exception e){
                 throw new RuntimeException("fail to start the server!!!");
             }
             try{
-                Thread t1 = new Thread(new serverListener(reqH));
+                Thread t1 = new Thread(new serverListener(reqH));// Launch serverlistener thread in seperate background thread and pass reqHandler to severlistener
                 t1.start();
             }catch(Exception e){
                 e.printStackTrace();
@@ -43,7 +44,9 @@ public class serverHandler implements HttpServerApp {
             throw new RuntimeException("Server is Currently Running on Port %d".formatted(port));
         }
     }
-
+    // This serverListener class implements Runnable for the concurrency
+    // and since it implements Runnable Interface we need to override run() method
+    // and in the run method we accepting the user request and create a seperate thread for each request and handling each request seperately in a concurrent manner.   
     private class serverListener implements Runnable{
         requestHandler reqH ;
         public serverListener(requestHandler reqH){
@@ -54,12 +57,12 @@ public class serverHandler implements HttpServerApp {
 
            try{
                 while(true){
-                    var connection = serverSocket.accept();
+                    var connection = serverSocket.accept();//Accepts connections in infinite loop, delegates to thread POOL via requestExecutor
                     // connection.setSoTimeout(connectionTimeOut);
                     requestExecutor.execute(()->{
                             try{
                                
-                                handleRequest(connection,reqH);
+                                handleRequest(connection,reqH);// here, we handle the request by uses  Executor for efficient connection pooling.(no new thread() is creaing for each request , after completing the task thread return to the pool and get ready for other connection )
                             }
                             catch(Exception e){
                                 e.printStackTrace();
@@ -73,21 +76,22 @@ public class serverHandler implements HttpServerApp {
             }
 
         }
-
+        // This handleRequest() method parse the raw HTTP Request 
+        // print it and send the response of corresponding request to the client.
         private void handleRequest(Socket connection,requestHandler reqH) throws Exception{
             
             try{
-                var parsedReq = RequestParser.parseReq(connection); 
+                var parsedReq = RequestParser.parseReq(connection); // parse the raw HTTP request
                 if(parsedReq.isEmpty()){
                     connection.close();
                     return;
                 }
-                ResponseHandler.printHeader(parsedReq);
-                ResponseHandler.respondToreq(connection, parsedReq.get(),reqH);
+                ResponseHandler.printHeader(parsedReq); // print the header Line and request in the terminal.
+                ResponseHandler.respondToreq(connection, parsedReq.get(),reqH); // send the response of corresponding request to the clinet with porper and correct headers + body. 
 
-                if(shouldReUseConnection(parsedReq.get().header())){
+                if(shouldReUseConnection(parsedReq.get().header())){ // here , just reusing the established connection.  
                     System.out.println("Connection Reusing !!!");
-                    handleRequest(connection,reqH);
+                    handleRequest(connection,reqH); 
                 }
             }
         catch(SocketTimeoutException se ){
@@ -102,6 +106,9 @@ public class serverHandler implements HttpServerApp {
         }
             
         }
+        // This function shouldReUseConnection() finds out whether we can reuse established  TCP connection or not.
+        // Connection: keep-alive means the TCP connection stays open after the HTTP response, 
+        // allowing multiple requests/responses over the same socket instead of closing/reopening for each one.
         private boolean shouldReUseConnection(Map<String,List<String>> header) {
            
             if(header.containsKey("connection")){
