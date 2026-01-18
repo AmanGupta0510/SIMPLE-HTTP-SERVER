@@ -31,38 +31,92 @@ nav ul li a{
     color: rgb(137, 137, 137);
     text-decoration: none;
 }
-.hero{
-    background: url('/public/bg1.jpg') center/cover no-repeat !important;
-   
+.hero {
+    background-image: url('/public/bg.jpg') !important;
     background-size: cover !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
     height: 100vh !important;
-    width: 100vw;
-    display: flex;
-    align-items: start;
-    justify-content: space-evenly;
-    margin-top: 3.63rem;
-    /* z-index: 1000; */
-   
-   
-}
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+    
+  
+} 
+ 
+ 
 .hero-content{
     
     background: rgba(10, 42, 80, 0.2);
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(4.5px);
     border-radius: 16px;
     border: 1px solid rgba(160, 161, 162, 0.2);
     padding: 2rem;
     margin-top: 0.5rem;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-   
+    height: 100vh;
+    width: 100vw;
+    display: flex
+    ;
+    justify-content: center;
+    align-items: center;
 }
 .heading1{
+    background: rgba(10, 42, 80, 0.2);
+    backdrop-filter: blur(4.5px);
+    border-radius: 16px;
+    border: 1px solid rgba(160, 161, 162, 0.2);
+    padding: 2rem;
+    margin-top: 0.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);  
  color: rgb(255, 255, 255);
  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
  font-weight: 300;
  font-style: italic;
+ text-shadow:rgb(0, 0, 0) ;
+ display: block;
+ align-items: center;
+
+}
+.button-container{
+    margin-top: 0.3rem;
+    display: flex;
+    justify-content: center;
+    
+    
+    
+}
+.button1{
+    display: inline-block;
+    padding: 5px 5px;     /* Larger: vertical 15px, horizontal 30px */
+    font-size: 18px;        /* Bigger text */
+    border-radius: 25px;    /* Rounded corners (50px = full pill/circle) */
+   
+    border: none;
+    cursor: pointer;
+    
+}
+button{
+    color: rgb(255, 255, 255);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-weight: 300;
+    font-style: italic;
+    appearance: none; 
+    outline: none;
+    border: none;
+    background: rgba(10, 42, 80, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: 1px solid rgba(206, 207, 208, 0.2);
+    padding: 1rem;
+    margin-top: 0.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+button:hover {
+    background-color: rgba(89, 221, 84, 0.896);
+    backdrop-filter: blur(10px);
+    border:3px;
+    border-color: aqua;
 }
 
 

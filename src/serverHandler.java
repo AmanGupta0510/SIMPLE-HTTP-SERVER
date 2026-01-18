@@ -83,7 +83,7 @@ public class serverHandler implements HttpServerApp {
             try{
                 var parsedReq = RequestParser.parseReq(connection); // parse the raw HTTP request
                 if(parsedReq.isEmpty()){
-                    connection.close();
+                    closeConnection(connection);
                     return;
                 }
                 ResponseHandler.printHeader(parsedReq); // print the header Line and request in the terminal.
@@ -93,16 +93,19 @@ public class serverHandler implements HttpServerApp {
                     System.out.println("Connection Reusing !!!");
                     handleRequest(connection,reqH); 
                 }
+                else{
+                    closeConnection(connection);
+                }
             }
         catch(SocketTimeoutException se ){
             System.out.println("Socket TimeOut");
-            connection.close();
+           closeConnection(connection);
 
         }
         catch(Exception e){
             System.out.println("Problem While handling the request");
             e.printStackTrace();
-            connection.close();
+            closeConnection(connection);
         }
             
         }
@@ -121,9 +124,24 @@ public class serverHandler implements HttpServerApp {
 
     @Override
     public void stop() {
-        
+        if(serverSocket!=null){
+            try{
+                serverSocket.close();
+            }
+            catch(Exception e){
+                throw new RuntimeException("Fail to close the server", e );
+            }
+            finally{
+                serverSocket = null;
+            }
+        }
     }
-
+    private void closeConnection(Socket connection){
+        try{
+            connection.close();
+        }
+        catch(Exception e){}
+    }
     
    
     

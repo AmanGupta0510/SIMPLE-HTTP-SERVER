@@ -1,6 +1,7 @@
 
 
 
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
@@ -88,7 +89,14 @@ public class ResponseHandler implements requestHandler {
                 // DON'T rethrow - expected!
             } catch (Exception e) {
                 System.err.println("Write error: " + e);  // Log others
-}
+            }
+            // finally{
+            //     os.close();
+            // }
+
+
+
+
            
 
 			
@@ -110,18 +118,24 @@ public class ResponseHandler implements requestHandler {
             FileServer fileManipulation = new FileServer();
 
             var filePath = fileManipulation.findPath(fileName[0]);
-            
-            var body = fileManipulation.readFileContext(filePath,url);
-            if(filePath.equals("public/error.html")){
+            File file = new File(filePath);
+            if(filePath.equals("public/error.html") || !file.exists()){
                 statusCode = 404;
             }
+            if(request.method().equalsIgnoreCase("HEAD")){
+                var responseHeader = Map.of("Content-Type",List.of(fileManipulation.getMIME(filePath)),
+                                      "Content-Length",List.of(String.valueOf(file.length())),"cache-Control",List.of("public, max-age=3600"));
+                return new HttpResponse(statusCode,responseHeader,new byte[0]);
+            }
+            var body = fileManipulation.readFileContext(filePath,url);
+           
             // var responseBody = body.getBytes(StandardCharsets.UTF_8);
 
-
+            
 
             
             var responseHeader =  Map.of("Content-Type", List.of(fileManipulation.getMIME(filePath)),
-                                     "Content-Length", List.of(String.valueOf(body.length)),"Cache-Control", List.of("public, max-age=3600") ); 
+                                     "Content-Length", List.of(String.valueOf(body.length)) ); 
             return new HttpResponse(statusCode,responseHeader,body); 
 
 

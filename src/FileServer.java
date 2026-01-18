@@ -1,4 +1,6 @@
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -16,7 +18,7 @@ public class FileServer {
         urlPathMapping.put("/logout","public/logout.html");
         urlPathMapping.put("/about","public/about.html");
         urlPathMapping.put("/style-index","public/style-index.css");
-        urlPathMapping.put("/bg1","public/bg1.jpg");
+        urlPathMapping.put("/bg","public/bg.jpg");
 
         
         
@@ -35,10 +37,10 @@ public class FileServer {
 
 
     public  String findPath(String url){
-        if(url.startsWith("/public")){
+        if(url.startsWith("/public/")){
             url = url.substring(7);
         }
-        System.out.println(url);
+        System.out.println(url+" "+url.length());
         if(urlPathMapping.containsKey(url)){
             return urlPathMapping.get(url);
         }
@@ -51,18 +53,20 @@ public class FileServer {
    
     public  byte[] readFileContext(String filePath,String url){
         
-      
-        Path path = Path.of(filePath);// 
-        System.out.println(path);
-        if(Files.exists(path)){
-            System.out.println("img file exist");
-            StringBuilder html = new StringBuilder();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        var buffer = new byte[8192];
 
-            try(BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))){
-                String read;
-                while((read=reader.readLine())!=null){
-                    read = read.replace("{{url}}", url);
-                    html.append(read).append("\n");
+        Path path = Path.of(filePath).toAbsolutePath();// 
+       
+        if(Files.exists(path)){
+            // System.out.println("img file exist");
+            // StringBuilder html = new StringBuilder();
+
+            try(FileInputStream fis = new FileInputStream(path.toFile())){
+                int bytesRead;
+                
+                while((bytesRead=fis.read(buffer))!=-1){
+                   baos.write(buffer,0,bytesRead);
                 }
             }
         
@@ -71,7 +75,7 @@ public class FileServer {
                 return "Error 404".getBytes(StandardCharsets.UTF_8);
             }
             // System.out.println(html);
-            return html.toString().getBytes(StandardCharsets.UTF_8);
+            return baos.toByteArray();
         }
         return "Error 404".getBytes(StandardCharsets.UTF_8);
     }
