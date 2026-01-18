@@ -26,7 +26,7 @@ public class FileServer {
         MIMEmapping.put("png","image/png");
         MIMEmapping.put("jpeg","image/jpeg");
         MIMEmapping.put("css","text/css; charSet=utf-8");
-        MIMEmapping.put("jpg","image/jpg");
+        MIMEmapping.put("jpg","image/jpeg");
 
         
         
@@ -35,7 +35,10 @@ public class FileServer {
 
 
     public  String findPath(String url){
-        
+        if(url.startsWith("/public")){
+            url = url.substring(7);
+        }
+        System.out.println(url);
         if(urlPathMapping.containsKey(url)){
             return urlPathMapping.get(url);
         }
@@ -52,7 +55,7 @@ public class FileServer {
         Path path = Path.of(filePath);// 
         System.out.println(path);
         if(Files.exists(path)){
-          
+            System.out.println("img file exist");
             StringBuilder html = new StringBuilder();
 
             try(BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))){
@@ -62,11 +65,12 @@ public class FileServer {
                     html.append(read).append("\n");
                 }
             }
-            
+        
             catch(Exception e){
                 e.printStackTrace();
                 return "Error 404".getBytes(StandardCharsets.UTF_8);
             }
+            // System.out.println(html);
             return html.toString().getBytes(StandardCharsets.UTF_8);
         }
         return "Error 404".getBytes(StandardCharsets.UTF_8);
