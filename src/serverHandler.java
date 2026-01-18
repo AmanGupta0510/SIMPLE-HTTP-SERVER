@@ -58,7 +58,7 @@ public class serverHandler implements HttpServerApp {
            try{
                 while(true){
                     var connection = serverSocket.accept();//Accepts connections in infinite loop, delegates to thread POOL via requestExecutor
-                    // connection.setSoTimeout(connectionTimeOut);
+                    connection.setSoTimeout(connectionTimeOut);
                     requestExecutor.execute(()->{
                             try{
                                

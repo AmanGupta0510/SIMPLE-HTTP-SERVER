@@ -3,6 +3,7 @@
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -75,14 +76,24 @@ public class ResponseHandler implements requestHandler {
             });
             
             responseHead.append(HTTP_HEAD_BODY_SEPERATOR);
-            os.write(responseHead.toString().getBytes(StandardCharsets.US_ASCII)); // write the response in the byte[] to the client.  
-            if(res.body().length >0){
-                os.write(res.body()); // if there is a body for the request then also write it to send the data to client.
+            try{
+                    os.write(responseHead.toString().getBytes(StandardCharsets.US_ASCII)); // write the response in the byte[] to the client.  
+                    if(res.body().length >0){
+                        os.write(res.body()); // if there is a body for the request then also write it to send the data to client.
+                    }
+                    os.flush(); //  flush() forces all buffered data to be sent immediately as only write() doesn't send the data it remains in the buffer(temporary memory stack where data stored before sending/receiving).
             }
+            catch (SocketException e) {
+                System.out.println("Client disconnected normally: " + e.getMessage());
+                // DON'T rethrow - expected!
+            } catch (Exception e) {
+                System.err.println("Write error: " + e);  // Log others
+}
+           
 
 			
 			
-            os.flush(); //  flush() forces all buffered data to be sent immediately as only write() doesn't send the data it remains in the buffer(temporary memory stack where data stored before sending/receiving).
+           
           
 
         }
@@ -110,7 +121,7 @@ public class ResponseHandler implements requestHandler {
 
             
             var responseHeader =  Map.of("Content-Type", List.of(fileManipulation.getMIME(filePath)),
-                                     "Content-Length", List.of(String.valueOf(body.length))); 
+                                     "Content-Length", List.of(String.valueOf(body.length)),"Cache-Control", List.of("public, max-age=3600") ); 
             return new HttpResponse(statusCode,responseHeader,body); 
 
 

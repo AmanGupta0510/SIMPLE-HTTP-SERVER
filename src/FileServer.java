@@ -15,13 +15,19 @@ public class FileServer {
         urlPathMapping.put("/login","public/login.html");
         urlPathMapping.put("/logout","public/logout.html");
         urlPathMapping.put("/about","public/about.html");
+        urlPathMapping.put("/style-index","public/style-index.css");
+        urlPathMapping.put("/bg1","public/bg1.jpg");
+
         
         
-        MIMEmapping.put("html","text/html");
+        MIMEmapping.put("html","text/html; charSet=utf-8");
         MIMEmapping.put("json","application/json");
         MIMEmapping.put("txt","text/plain");
         MIMEmapping.put("png","image/png");
         MIMEmapping.put("jpeg","image/jpeg");
+        MIMEmapping.put("css","text/css; charSet=utf-8");
+        MIMEmapping.put("jpg","image/jpg");
+
         
         
 
