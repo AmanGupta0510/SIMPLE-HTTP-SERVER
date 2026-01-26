@@ -127,7 +127,7 @@ public class ResponseHandler implements requestHandler {
                                       "Content-Length",List.of(String.valueOf(file.length())),"cache-Control",List.of("public, max-age=3600"));
                 return new HttpResponse(statusCode,responseHeader,new byte[0]);
             }
-            var body = fileManipulation.readFileContext(filePath,url);
+            var body = fileManipulation.readFileContext(filePath,url,request.body(),request.method());
            
             // var responseBody = body.getBytes(StandardCharsets.UTF_8);
 
