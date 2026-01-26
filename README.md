@@ -4,7 +4,7 @@
 <br>
 <br>
 
-<Features>
+<h1>Features</h1>
 <ul>
 <li>Full HTTP/1.1 parsing (GET,POST,Header)</li>
 <li>Static File Serving(public/folder)</li>
@@ -16,14 +16,43 @@
 <br>
 <br>
 <h1>Quick Start</h1>
-# 1. Clone & compile
-git clone <repository_name>
-cd Simple-Http-Server
-javac -d . src\*.java
+
+# 1. Clone & compile 
+<br>
+<h3>git clone <repository_name></h3>
+<br>
+<h3>cd Simple-Http-Server</h3>
+<br>
+<h3>javac -d . src\*.java</h3>
 
 # 2. Run server
-java Server
+<h3>java Server</h3>
 
 # 3. Test in browser
 http://localhost:8080/
+
+
+<h2>Project Structure</h2>
+Simple-Http-Server/
+├── src/
+│   └── FileServer.java      # Handling file as per method(GET,POST) 
+│   └── HttpReq.java         # HttpReq class(Getter,Setter,Constructor)
+│   └── HttpResponse.java    # HttpResponse class(Getter,Setter,Constructor)
+│   └── HttpServerApp.java   # Server Interface (Start,Stop)
+│   └── requestHandler.java  # Interface (ResPonse Generator)
+│   └── RequestParser.java   # Handling & parsing request(Header,Body)
+│   └── ResponseHandler.java # Handling Response (creating correct response)
+│   └──Server.java             # Main server
+│   └──serverHandler.java      # Handling Concurrent request and server
+├── public/                  # Static files
+│   ├── index.html           # home Page
+│   ├── login.html           # login Page (POST form)
+│   ├── about.html           # about Page ({{username}} template)
+│   ├── error.html           # error Page
+│   ├── style-index.css       
+│   ├── style-login.css
+│   └── bg.jpg
+│
+└── README.md
+
 
