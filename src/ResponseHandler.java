@@ -63,7 +63,7 @@ public class ResponseHandler implements requestHandler {
             }
             final String HTTP_NEW_LINE_SEPERATOR = "\r\n";
             final String HTTP_HEAD_BODY_SEPERATOR = HTTP_NEW_LINE_SEPERATOR+HTTP_NEW_LINE_SEPERATOR;
-            var res = reqHandler.handle(req);// handle the request of the client , provide response  with correct header and correct body.res contains the response of client request.
+            var res = reqHandler.handle(connection,req);// handle the request of the client , provide response  with correct header and correct body.res contains the response of client request.
             var os = connection.getOutputStream(); // Get the stream to send data to the client.
             var responseHead = new StringBuilder("HTTP/1.1 %d".formatted(res.statusCode()));
 
@@ -105,7 +105,7 @@ public class ResponseHandler implements requestHandler {
           
 
         }
-        public HttpResponse handle(HttpReq request) {
+        public HttpResponse handle(Socket connection,HttpReq request) {
 		
             var url  = request.url();
             var statusCode = 200;
@@ -127,15 +127,18 @@ public class ResponseHandler implements requestHandler {
                                       "Content-Length",List.of(String.valueOf(file.length())),"cache-Control",List.of("public, max-age=3600"));
                 return new HttpResponse(statusCode,responseHeader,new byte[0]);
             }
+            if(request.method().equalsIgnoreCase("POST"))statusCode=302;
             var body = fileManipulation.readFileContext(filePath,url,request.body(),request.method());
            
             // var responseBody = body.getBytes(StandardCharsets.UTF_8);
 
             
-
+           
             
             var responseHeader =  Map.of("Content-Type", List.of(fileManipulation.getMIME(filePath)),
-                                     "Content-Length", List.of(String.valueOf(body.length)) ); 
+                                     "Content-Length", List.of(String.valueOf(body.length)) );
+                                     
+            logRequestFile.logRequest(request.method(),url,statusCode,connection.getInetAddress().getHostAddress());                          
             return new HttpResponse(statusCode,responseHeader,body); 
 
 

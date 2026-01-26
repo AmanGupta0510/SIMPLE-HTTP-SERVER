@@ -21,18 +21,25 @@ public class RequestParser {
     // This method/function parse the raw HTTP request into proper HTTP req with Header,Body,Method,URL And ProtocolVersion.
 
     public static Optional<HttpReq> parseReq(Socket connection) throws Exception{
-
+       String url = "/";
+       String protocolVersion = "0.0.0.0";
+       String method = "GET";
        var stream = connection.getInputStream();// take the raw HTTP request from the client.
        var rawReqHead = readRawRequestHead(stream); // convert the raw HTTP request into byte[] , which basically convert the actual req into byte[] array.ex:- GET HTTP/1.1 ... -> [73,43,12,32,...].
        if(rawReqHead.length<=0)return Optional.empty(); // inCase there is no request.
 
        var reqHead = new String(rawReqHead,StandardCharsets.US_ASCII); // here,decode the byte[HTTP request] into human readable format (String) using ASCII.
        var headerLine = reqHead.split("\r\n"); // since HTTP req contains delimeter as a seperator between contents , So here just split the requestHead into the String[] using "\r\n".ex:- "GET / HTTP/1.1 \r\n Host: locolHost:8080 ..." -> ["GET / HTTP/1.1","Host: locolhost:8080",...]
-       var line = headerLine[0].split(" ");// again split the headerLine into String[] ex: ["GET / HTTP/1.1"] -> ["GET","/","HTTP/1.1"].
-       String method = line[0];// extract the 0th element as a method ex:-GET,POST,etc. 
-        String url = line[1]; // extract the 1st element as an url ex:- /,/index.html,etc.
-        String protocolVersion = line[2]; // extract the protocolversion.
+       
+       
+       if(headerLine.length>1){
+        var line = headerLine[0].split(" ");// again split the headerLine into String[] ex: ["GET / HTTP/1.1"] -> ["GET","/","HTTP/1.1"].
+         method = line[0];// extract the 0th element as a method ex:-GET,POST,etc. 
+         url = line[1]; // extract the 1st element as an url ex:- /,/index.html,etc.
+         protocolVersion = line[2]; // extract the protocolversion.
 
+       }
+        
         var header = readHeader(headerLine); // this readHeader function convert the headers into the Key:Value pair.
         var bodyLength = getExpectedBodylength(header);
 
