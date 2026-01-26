@@ -35,20 +35,20 @@ http://localhost:8080/
 <h2>Project Structure</h2>
 Simple-Http-Server/<br>
 ├── src/<br>
-│   └── FileServer.java      # Handling file as per method(GET,POST) <br>
-│   └── HttpReq.java         # HttpReq class(Getter,Setter,Constructor)<br>
-│   └── HttpResponse.java    # HttpResponse class(Getter,Setter,Constructor)<br>
-│   └── HttpServerApp.java   # Server Interface (Start,Stop)<br>
-│   └── requestHandler.java  # Interface (ResPonse Generator)<br>
-│   └── RequestParser.java   # Handling & parsing request(Header,Body)<br>
-│   └── ResponseHandler.java # Handling Response (creating correct response)<br>
-│   └──Server.java            # Main server<br>
-│   └──serverHandler.java      # Handling Concurrent request and server<br>
-├── public/                  # Static files<br>
-│   ├── index.html           # home Page<br>
-│   ├── login.html           # login Page (POST form)<br>
-│   ├── about.html           # about Page({{username}} template)<br>
-│   ├── error.html           # error Page<br>
+│   └── FileServer.java      #Handling file as per method(GET,POST) <br>
+│   └── HttpReq.java         #HttpReq class(Getter,Setter,Constructor)<br>
+│   └── HttpResponse.java    #HttpResponse class(Getter,Setter,Constructor)<br>
+│   └── HttpServerApp.java   #Server Interface (Start,Stop)<br>
+│   └── requestHandler.java  #Interface (ResPonse Generator)<br>
+│   └── RequestParser.java   #Handling & parsing request(Header,Body)<br>
+│   └── ResponseHandler.java #Handling Response (creating correct response)<br>
+│   └──Server.java            #Main server<br>
+│   └──serverHandler.java      #Handling Concurrent request and server<br>
+├── public/                  #Static files<br>
+│   ├── index.html           #home Page<br>
+│   ├── login.html           #login Page (POST form)<br>
+│   ├── about.html           #about Page({{username}} template)<br>
+│   ├── error.html           #error Page<br>
 │   ├── style-index.css  <br>     
 │   ├── style-login.css<br>
 │   └── bg.jpg <br>
