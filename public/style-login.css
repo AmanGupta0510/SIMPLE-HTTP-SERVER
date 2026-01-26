@@ -3,9 +3,10 @@
     margin: 0;
     padding: 0;
     box-sizing: 0;
-    /* background: rgb(10, 42, 80); */
+    /* background-image: url('/public/bg.jpg') !important; */
 }
 #username {
+ margin-top: 5rem;
  text-align: center; 
  font-size: 1.2rem; 
  background-color: aliceblue;
@@ -13,7 +14,7 @@
  border:none;
  border-radius: 10px; 
  font-style: italic; 
- font-family: Arial, Helvetica, sans-serif;
+ 
  display: block;
  width: 25rem;
  height: 2rem;
@@ -28,7 +29,7 @@
     border-radius: 10px;
     font-size: 1.2rem;  
     font-style: italic; 
-    font-family: Arial, Helvetica, sans-serif;
+    
     display: block;
     width: 25rem;
     height: 2rem;
@@ -44,7 +45,6 @@
     height: 2rem; 
     font-size: 1.2rem;  
     font-style: italic; 
-    font-family: Arial, Helvetica, sans-serif;
 }
 #submit_button:hover{
     color: black;
@@ -94,4 +94,10 @@
     display: flex;
     justify-content: center;
 
+}
+.page_name{
+    border-radius: 5px;
+    color: rgb(173, 181, 187);
+    text-align: center;
+    
 }
