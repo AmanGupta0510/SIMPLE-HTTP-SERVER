@@ -33,7 +33,7 @@ http://localhost:8080/
 
 
 <h2>Project Structure</h2>
-Simple-Http-Server/
+Simple-Http-Server/<br>
 ├── src/
 │   └── FileServer.java      # Handling file as per method(GET,POST) 
 │   └── HttpReq.java         # HttpReq class(Getter,Setter,Constructor)
