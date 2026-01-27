@@ -57,11 +57,17 @@ Simple-Http-Server/<br>
 
 <h1>Software Architecture</h1>
 A[Client Request] --> B[ServerSocket.accept()]
+<br>
     B --> C[ThreadPoolExecutor]
+    <br>
     C --> D[RequestParser]
+    <br>
     D --> E[ConcurrentHashMap Routes]
+    <br>
     E --> F[Handler: FileServe/PostForm]
+    <br>
     F --> G[ResponseHandler]
+    <br>
     G --> A
 
 
