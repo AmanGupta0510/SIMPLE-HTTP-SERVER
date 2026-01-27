@@ -55,4 +55,13 @@ Simple-Http-Server/<br>
 │
 └── README.md <br>
 
+<h1>Software Architecture</h1>
+A[Client Request] --> B[ServerSocket.accept()]
+    B --> C[ThreadPoolExecutor]
+    C --> D[RequestParser]
+    D --> E[ConcurrentHashMap Routes]
+    E --> F[Handler: FileServe/PostForm]
+    F --> G[ResponseHandler]
+    G --> A
+
 
